@@ -1,0 +1,2 @@
+version 1.1
+Added Linux support for running external C++ program (DHPRE). Do not forget to modify MoneCarloPath.txt according to your path to executable as well as Geant4 nuclear data. All entries must be separated by white-spaces (new line is ok).

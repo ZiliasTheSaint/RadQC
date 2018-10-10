@@ -1,0 +1,3 @@
+#!/bin/bash
+    clear
+./jre/bin/java -jar RadQC.jar
