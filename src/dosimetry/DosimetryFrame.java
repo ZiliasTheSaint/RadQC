@@ -1931,6 +1931,7 @@ public class DosimetryFrame extends JFrame implements ActionListener, ItemListen
 		private String G4REALSURFACEDATA="";
 		private String G4SAIDXSDATA="";
 		protected String detFolderURL2="";
+		private String LD_LIBRARY_PATH="";
 		//===========================================
 	/**
 	 * Read the path to Monte Carlo program, prepare its input file and start computation thread
@@ -1939,7 +1940,7 @@ public class DosimetryFrame extends JFrame implements ActionListener, ItemListen
 		String fileSeparator = System.getProperty("file.separator");
 		String curentDir = System.getProperty("user.dir");
 		String filename1 = curentDir + fileSeparator + filenameMC;
-		
+	//System.out.println(filename1);	
 		G4LEDATA="";
 		G4LEVELGAMMADATA="";
 		G4NEUTRONHPDATA="";
@@ -1949,66 +1950,80 @@ public class DosimetryFrame extends JFrame implements ActionListener, ItemListen
 		G4REALSURFACEDATA="";
 		G4SAIDXSDATA="";
 		
-		File f = new File(filename1);
-		int i = 0;
-		String pathMC = "";
-
-		int countLine=0;//@@@@@@@@@@@@@@@@@@@@@@@@@
-		StringBuffer desc = new StringBuffer();
-		boolean haveData = false;
+		LD_LIBRARY_PATH = "";
 		
+		File f = new File(filename1);
+		//int i = 0;
+		String pathMC = "";
+		//System.lineSeparator();
+		//char lineSep = System.getProperty("line.separator").charAt(0);//'\n';//@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		int countLine=0;//@@@@@@@@@@@@@@@@@@@@@@@@@
+		//StringBuffer desc = new StringBuffer();
+		//boolean haveData = false;
+		String line = "";
 		if (f.exists()) {
 			try {
-				FileReader fr = new FileReader(f);
-				while ((i = fr.read()) != -1) {
-					//String s1 = new String();
-					//s1 = asciiToStr(i);
-					//pathMC = pathMC + s1;
-					if (!Character.isWhitespace((char) i)) {
-						desc.append((char) i);
-						haveData = true;
-					} else {
-						if (haveData)// we have data
-						{
-							haveData = false;// reset
+				//FileReader fr = new FileReader(f);
+				//FileInputStream in = new FileInputStream(filename1);
+			BufferedReader reader = new BufferedReader(new FileReader(filename1));
+			line=reader.readLine();
+				while (line!=null) {//(i = in.read()) != -1) {//((i = fr.read()) != -1) {
+					//if ((char) i != lineSep) {//(!Character.isWhitespace((char) i)) {
+					//	desc.append((char) i);
+						//haveData = true;
+					//} else {
+						//if (haveData)// we have data
+						//{
+						//	haveData = false;// reset
+						//System.out.println(desc.toString());
+					//line = desc.toString();
 							if (countLine==0){//@@@@@@@@@@@@@@
-								pathMC = pathMC + desc.toString();
+								pathMC = line;//pathMC + desc.toString();//System.out.println(pathMC);
 							} else if (countLine==1){
-								G4LEDATA=G4LEDATA+desc.toString();
+								G4LEDATA=line;//G4LEDATA+desc.toString();
 							}else if (countLine==2){
-								G4LEVELGAMMADATA=G4LEVELGAMMADATA+desc.toString();
+								G4LEVELGAMMADATA=line;//G4LEVELGAMMADATA+desc.toString();
 							}else if (countLine==3){
-								G4NEUTRONHPDATA=G4NEUTRONHPDATA+desc.toString();
+								G4NEUTRONHPDATA=line;//G4NEUTRONHPDATA+desc.toString();
 							}else if (countLine==4){
-								G4NEUTRONXSDATA=G4NEUTRONXSDATA+desc.toString();
+								G4NEUTRONXSDATA=line;//G4NEUTRONXSDATA+desc.toString();
 							}else if (countLine==5){
-								G4PIIDATA=G4PIIDATA+desc.toString();
+								G4PIIDATA=line;//G4PIIDATA+desc.toString();
 							}else if (countLine==6){
-								G4RADIOACTIVEDATA=G4RADIOACTIVEDATA+desc.toString();
+								G4RADIOACTIVEDATA=line;//G4RADIOACTIVEDATA+desc.toString();
 							}else if (countLine==7){
-								G4REALSURFACEDATA=G4REALSURFACEDATA+desc.toString();
+								G4REALSURFACEDATA=line;//G4REALSURFACEDATA+desc.toString();
 							}else if (countLine==8){
-								G4SAIDXSDATA=G4SAIDXSDATA+desc.toString();
+								G4SAIDXSDATA=line;//G4SAIDXSDATA+desc.toString();
+							} else if (countLine==9){
+								LD_LIBRARY_PATH=line;//LD_LIBRARY_PATH+desc.toString();
 							}
 							
 							countLine++;
-						}
-						desc = new StringBuffer();
-					}
+				line=reader.readLine();
+						//}
+						//desc = new StringBuffer();
+					//}
 				}
-				fr.close();
+				reader.close();//in.close();//fr.close();
 				
 				pathMC.trim();G4LEDATA.trim();
 				G4LEVELGAMMADATA.trim();G4NEUTRONHPDATA.trim();G4NEUTRONXSDATA.trim();
 				G4PIIDATA.trim();G4RADIOACTIVEDATA.trim();G4REALSURFACEDATA.trim();G4SAIDXSDATA.trim();
-				
-				doseFolderURL=pathMC+ fileSeparator;
-				
+				LD_LIBRARY_PATH.trim();
+		//System.out.println(LD_LIBRARY_PATH);
+		//System.out.println("path: "+pathMC);
+				doseFolderURL=pathMC+fileSeparator;
+		//System.out.println("URL: "+ doseFolderURL);
+		
 				detFolderURL2=pathMC;
 				if (SystemInfo.isLinux())
 					doseExeName= detExeNameLinux;//"detector";
-				
+		//System.out.println(fileSeparator);
+		//System.out.println(doseExeName);
 				String filename = pathMC+ fileSeparator + doseExeName;
+				//filename.trim();
+		//System.out.println(filename);
 				File ff = new File(filename);
 				if (ff.exists()){
 					//textArea.append(resources.getString("MC.notAvailable")+"\n");
@@ -2041,6 +2056,8 @@ public class DosimetryFrame extends JFrame implements ActionListener, ItemListen
 		
 		String command =workDir+file_sep+doseExeFileName;//(String)session.getAttribute("dhpreExeName");
 		String argument = macroFilename;//timeS;
+		
+		//System.out.println("enter");// +LD_LIBRARY_PATH);
 		//===============LINUX===================
 				if (SystemInfo.isLinux()){
 					//Creating a running Script because we want to set environmental variable
@@ -2059,9 +2076,10 @@ public class DosimetryFrame extends JFrame implements ActionListener, ItemListen
 					str= str+G4RADIOACTIVEDATA+"\n";
 					str= str+G4REALSURFACEDATA+"\n";
 					str= str+G4SAIDXSDATA+"\n";
+					str = str+LD_LIBRARY_PATH+"\n";
 					str = str+"cd "+detFolderURL2+"; ./"+doseExeFileName+" ./"+macroFilename;
-					
-					//System.out.println(str);
+					//System.out.println("test: \n");
+					//System.out.println(str);//if(true)return;
 					//return;
 					//boolean succesWriteFile=true;
 					try {

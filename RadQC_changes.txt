@@ -1,2 +1,5 @@
+version 1.2
+Fixed support for Linux when updating to Mint 19 and latest java 8 (up181). All entries (path to executable folder, paths to nuclear data an path to Geant4 libraries) in MoneCarloPath.txt must be separated by new lines!
+
 version 1.1
 Added Linux support for running external C++ program (DHPRE). Do not forget to modify MoneCarloPath.txt according to your path to executable as well as Geant4 nuclear data. All entries must be separated by white-spaces (new line is ok).
