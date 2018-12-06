@@ -1,3 +1,6 @@
+version 1.3
+Fixed minor bug in XRaySpectra when building the filename for reading spectra. The case for anode angle of 10 is now properly fixed.
+
 version 1.2
 Fixed support for Linux when updating to Mint 19 and latest java 8 (up181). All entries (path to executable folder, paths to nuclear data an path to Geant4 libraries) in MoneCarloPath.txt must be separated by new lines!
 
