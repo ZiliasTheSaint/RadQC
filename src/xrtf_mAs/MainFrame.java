@@ -1777,7 +1777,7 @@ public class MainFrame extends JFrame implements MessageRetriever, Runnable, Act
     	
 		int ianod_file = (new Double(uAnodD)).intValue();
 		String uanodS = "";
-		if (uAnodD > 10) {
+		if (uAnodD >= 10) {
 			if (XRay.ianod == 0)
 				uanodS = ianod_file + "0";
 			else if (XRay.ianod == 1)
