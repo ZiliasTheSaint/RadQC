@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.text.DecimalFormatSymbols;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -163,16 +164,20 @@ public class Start {
 	 * @param args args
 	 */
 	public static void main(String[] args) {
-		//----- Lifetime fatal cancer risk [cases/1 million population]
-		//String str = "Effective dose in body [Gy[-]Sv]: 481.424 picoGy  +- 0.361921 %";
-		//int len = str.length();
-		//String Str = extractDigits(str);
-		//System.out.println("digits: "+Str);
-	    
-		// TODO Auto-generated method stub		
+		
 		loadLookAndFeel();
 		// Toolkit.getDefaultToolkit().beep();//audio beep!!!
-		new RadQCFrame();
+		//new RadQCFrame();
+		SwingUtilities.invokeLater(
+
+				new Runnable() {
+					public void run() {
+						// Turn off metal's use of bold fonts
+						UIManager.put("swing.boldMetal", Boolean.FALSE);
+						new RadQCFrame();
+					}
+				}
+		);
 
 	}
 

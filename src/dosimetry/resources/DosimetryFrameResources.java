@@ -93,7 +93,7 @@ public class DosimetryFrameResources extends ListResourceBundle{
 			{"sliceThickness.label", "Slice thickness T (if multislice scanner, provide NT) or field height if dental panoramic scan mode [mm]: "},
 			{"rotationAngleIncrement.label", "Rotation angle increment (for helical scan, let the default value) [deg]: "},
 			{"pitchFactor.label", "Pitch factor p (p = couch movement in 1 rotation/T): "},
-			{"ctdi.label", "CTDIc free, CT free in air kerma index (incident free in air kerma on central axis/rotation ) [uGy]: "},
+			{"ctdi.label", "Free in air kerma on central axis per rotation (our strict definition of CTDI) [uGy]: "},
 			{"ctdiVol.label", "CTDIvol, for comparison with suspension level [uGy]: "},
 			{"CTDIB", "Evaluate CTDI..."},
 	        {"CTDIB.mnemonic", new Character('E')},
@@ -201,7 +201,8 @@ public class DosimetryFrameResources extends ListResourceBundle{
 	        {"autoT.ch","If dental panoramic scan mode, auto-adjust T to be the field height related to the radiological examination"},
 	        //
 	        {"KAP.INFO", "The field dimensions should not be visible because those values are used internally to match phantom not actual patient. \n Still, one can quickly check X-ray DAP-meter accuracy by using same distance for detector and phantom and the experimental field dimensions (uncheck auto-update)!"},
-	        {"CT.INFO", "These evaluations are for CTDI measured/computed on CT phantom (head or body). The CTDIc required for Monte Carlo simulation is free in air! If measurement is without CT phantom then the value of CTDIc can be safely copy/pasted in the corresponding field of simulation window (in this case, do not forget to convert mGy to uGy!)"},
+	        {"CT.INFO", "These evaluations are for CTDI measured/computed on CT phantom (head or body). The common protocol is to multiply the reading with L/T (L is chamber length of 100 mm, T is slice thickness). By doing so, you artificially increase the reading as if the whole ionization chamber is uniformely exposed!? Makes no sense unless is just another arbitrary dosimetric unit useful only for inter-comparisons and that's it."
+	        		+ " The quantity required for Monte Carlo simulation is kerma free in air per rotation measured at center! It can be measured with properly calibrated ionisation chamber or TLD (our definition of CTDI)!)"},
 	        
 	        {"KAPB", "Evaluate KAP..."},
 	        {"KAPB.mnemonic", new Character('E')},
