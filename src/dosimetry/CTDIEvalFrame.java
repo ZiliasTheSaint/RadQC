@@ -157,7 +157,7 @@ public class CTDIEvalFrame extends JFrame implements ActionListener{
 		sliceThicknessTf.setText(mf.sliceThickness_toSave);
 		pitchTf.setEditable(false);
 		sliceThicknessTf.setEditable(false);
-		lengthTf.setText("1");//"100");
+		lengthTf.setText("100");//"1");
 		//nslicesTf.setText("1");
 				
 		exposureTf.addActionListener(this);

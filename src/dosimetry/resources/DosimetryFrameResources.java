@@ -221,8 +221,8 @@ public class DosimetryFrameResources extends ListResourceBundle{
 	        
 	        {"ctdiEval.length.label","Ionization chamber length [mm]: "},
 	        {"ctdiEval.slices.label","Number of slices: "},
-	        {"ctdiEval.exposure.label", "Exposure/air kerma FOR A SINGLE ROTATION of CT scanner: "},
-	        {"ctdiEval.calFactor.label","Calibration factor [mGy x mm/Reading_on_mGyScale]: "},
+	        {"ctdiEval.exposure.label", "Reading FOR A SINGLE ROTATION of CT scanner: "},
+	        {"ctdiEval.calFactor.label","Calibration factor -e.g. for 100 mm ionisation chamber- [mGy x mm/Reading_on_mGyScale]: "},
 	        {"ctdiEval.sliceThickness.label","Slice thickness T (if multislice scanner, provide NT) or field height if dental panoramic scan mode [mm]: "},
 	        {"ctdiEval.pitch.label","Pitch factor: "},
 	        {"ctdiEval.setCTDIcB", "Set as CTDIc"},
