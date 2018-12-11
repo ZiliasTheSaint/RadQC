@@ -201,8 +201,14 @@ public class DosimetryFrameResources extends ListResourceBundle{
 	        {"autoT.ch","If dental panoramic scan mode, auto-adjust T to be the field height related to the radiological examination"},
 	        //
 	        {"KAP.INFO", "The field dimensions should not be visible because those values are used internally to match phantom not actual patient. \n Still, one can quickly check X-ray DAP-meter accuracy by using same distance for detector and phantom and the experimental field dimensions (uncheck auto-update)!"},
-	        {"CT.INFO", "These evaluations are for CTDI measured/computed on CT phantom (head or body). The common protocol is to multiply the reading with L/T (L is chamber length of 100 mm, T is slice thickness). By doing so, you artificially increase the reading as if the whole ionization chamber is uniformely exposed!? Makes no sense unless is just another arbitrary dosimetric unit useful only for inter-comparisons and that's it."
-	        		+ " The quantity required for Monte Carlo simulation is kerma free in air per rotation measured at center! It can be measured with properly calibrated ionisation chamber or TLD (our definition of CTDI)!)"},
+	        {"CT.INFO", "These evaluations are for CTDI measured/computed on CT phantom (head or body). The common protocol is to multiply the reading with L/T (L is chamber length of 100 mm, T is slice thickness). By doing so, you artificially increase the reading as if the whole ionization chamber is uniformely exposed!? "
+	        		+ " Also, because the reading is directly proportional with T (more dose when more irradiated length), the CTDI evaluated this way is INDEPENDENT of T. For MonteCarlo we want the reading as it is dependent on "
+	        		+ "whatever settings are introduced at command table. The same T independence of CTDI is found when applying TRS457 from IAEA. In fact all these "
+	        		+ "institutions are completely wrong when comes to evaluating CTDI. From its mathematical expression as being the integral of dose over ionisation chamber length divided by actual irradiated length T, "
+	        		+ "we noticed that the integral is approximately equal with the reading times T (plus some realatively very small numbers). That's because the almost all dose profile is concentrated in T region (in ideal chamber, all dose profile is inside T). Therefore by dividing with T, we find that "
+	        		+ "actually the CTDI is THE READING of ionisation chamber (properly calibrated obviously). Hence, mathematical definition of CTDI match our needs of air kierma (the reading) per rotation. The IAEA and other methods of assessing CTDI violates its mathematical definition. "
+	        		+ "If you want to follow the mathematical definition of CTDI, let calibration field be the same as slice thickness field, they will cancel each other so the reading is all that matters."
+	        		+ " Again, the quantity required for Monte Carlo simulation is kerma free in air per rotation measured at center! It can be measured with properly calibrated ionisation chamber or TLD (our definition of CTDI which match the CTDI mathematical definition)!"},
 	        
 	        {"KAPB", "Evaluate KAP..."},
 	        {"KAPB.mnemonic", new Character('E')},

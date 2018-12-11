@@ -38,7 +38,7 @@ import radQC.RadQCFrame;
 @SuppressWarnings("serial")
 public class CTDIEvalFrame extends JFrame implements ActionListener{
 
-	private static final Dimension PREFERRED_SIZE = new Dimension(950, 550);
+	private static final Dimension PREFERRED_SIZE = new Dimension(950, 600);
 	private static final Dimension textAreaDimension = new Dimension(500, 150);
 	private DosimetryFrameCt mf;
 	
@@ -157,9 +157,9 @@ public class CTDIEvalFrame extends JFrame implements ActionListener{
 		sliceThicknessTf.setText(mf.sliceThickness_toSave);
 		pitchTf.setEditable(false);
 		sliceThicknessTf.setEditable(false);
-		lengthTf.setText("100");//"1");
-		//nslicesTf.setText("1");
-				
+		//lengthTf.setText("100");//"1");
+		lengthTf.setText(mf.sliceThickness_toSave);
+						
 		exposureTf.addActionListener(this);
 		
 		Character mnemonic = null;
