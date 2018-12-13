@@ -24,6 +24,9 @@
 /nbdist/
 /.nb-gradle/
 
+#Eclipse
+/bin/
+
 ### Java ###
 # Compiled class file
 *.class
