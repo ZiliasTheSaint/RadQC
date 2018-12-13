@@ -65,7 +65,7 @@ public class RadQCFrameResources extends ListResourceBundle{
 			{ "Author.name", "Dan Fulea , fulea.dan@gmail.com" },
 
 			{ "Version", "Version:" },
-			{ "Version.name", "RadQC 1.4" },
+			{ "Version.name", "RadQC 1.5" },
 
 			{
 					"License",

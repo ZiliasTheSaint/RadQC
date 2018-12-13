@@ -50,7 +50,8 @@ public class DosimetryFrameResources extends ListResourceBundle{
 			{ "DosimetryFrameFluoro.NAME", "Dosimetry - Fluoroscopy" },
 			{ "DosimetryFrameMammo.NAME", "Dosimetry - Mammography" },
 			{ "DosimetryFrameCt.NAME", "Dosimetry - CT" },
-			{ "CTDIEvalFrame.NAME", "CTDI - quick evaluation" },
+			{ "CTDIEvalFrame.NAME", "CTDIvol - quick evaluation" },
+			{ "CTDIAirEvalFrame.NAME", "CTDIair - evaluation from mAs per rotation" },
 			
 			{"phantomSex.cb", new String[] {"Male","Female"}},
 			{"phantomSex.male", "Male"},
@@ -75,7 +76,7 @@ public class DosimetryFrameResources extends ListResourceBundle{
 			{"phantom.breast.thickness.label", "Breast thickness [cm]: "},
 			
 			{"kv.label", "Kilovoltage: "},			
-			{"filtration.label", "Total tube filtration taken from database (if no record then a generic value of 2.5 is displayed) [mmAl]: "},
+			{"filtration.label", "Total tube filtration taken from database (if no record then a generic value of 9.0 is displayed) [mmAl]: "},
 			{"filtration.label.mammo", "Total tube filtration taken from database (if no record then a generic value of 0.5 is displayed) [mmAl]: "},
 			{ "filtrationB", "Compute tube total filtration..." },
 			{ "filtrationB.toolTip", "Compute tube total filtration based on attenuators" },
@@ -90,15 +91,18 @@ public class DosimetryFrameResources extends ListResourceBundle{
 			{"fanBeam.cb", new String[] {"on","off"}},
 			{"fanBeam.label", "Fan beam geometry (pencil beam otherwise): "},
 			{"distance.label.ct", "Focus to central axis (phantom mid-plane) distance [cm]: "},
-			{"sliceThickness.label", "Slice thickness T (if multislice scanner, provide NT) or field height if dental panoramic scan mode [mm]: "},
+			{"sliceThickness.label", "Collimation (beam width) - slice thickness T (NT if multislice scanner) or field height if dental panoramic scan mode [mm]: "},
 			{"rotationAngleIncrement.label", "Rotation angle increment (for helical scan, let the default value) [deg]: "},
 			{"pitchFactor.label", "Pitch factor p (p = couch movement in 1 rotation/T): "},
-			{"ctdi.label", "Free in air kerma on central axis per rotation (our strict definition of CTDI) [uGy]: "},
-			{"ctdiVol.label", "CTDIvol, for comparison with suspension level [uGy]: "},
-			{"CTDIB", "Evaluate CTDI..."},
+			{"ctdi.label", "Free in air kerma on central axis per rotation (mathematical definition of CTDI) [uGy]: "},
+			{"ctdiVol.label", "OPTIONAL - CTDIvol, for comparison with suspension level [uGy]: "},
+			{"CTDIB", "Evaluate CTDIvol..."},
 	        {"CTDIB.mnemonic", new Character('E')},
-	        {"CTDIB.toolTip", "Perform CTDI calculation based on dosimeter reading"},
+	        {"CTDIB.toolTip", "Perform CTDIvol calculation based on dosimeter reading"},
 	        //{"BSF.label", "Standard backscatter factor BSF (general 1.1 - 1.6, 1.1 for mammo): "},
+	        {"CTDIB.air", "Evaluate CTDIair..."},
+	        {"CTDIB.air.mnemonic", new Character('v')},
+	        {"CTDIB.air.toolTip", "Perform CTDIair calculation based on mAs per rotation"},
 			
 			{"exam.border", "KAP and examination settings"},
 			{"exam.ct.border", "CTDI and examination settings"},
@@ -201,14 +205,13 @@ public class DosimetryFrameResources extends ListResourceBundle{
 	        {"autoT.ch","If dental panoramic scan mode, auto-adjust T to be the field height related to the radiological examination"},
 	        //
 	        {"KAP.INFO", "The field dimensions should not be visible because those values are used internally to match phantom not actual patient. \n Still, one can quickly check X-ray DAP-meter accuracy by using same distance for detector and phantom and the experimental field dimensions (uncheck auto-update)!"},
-	        {"CT.INFO", "These evaluations are for CTDI measured/computed on CT phantom (head or body). The common protocol is to multiply the reading with L/T (L is chamber length of 100 mm, T is slice thickness). By doing so, you artificially increase the reading as if the whole ionization chamber is uniformely exposed!? "
-	        		+ " Also, because the reading is directly proportional with T (more dose when more irradiated length), the CTDI evaluated this way is INDEPENDENT of T. For MonteCarlo we want the reading as it is dependent on "
-	        		+ "whatever settings are introduced at command table. The same T independence of CTDI is found when applying TRS457 from IAEA. In fact all these "
-	        		+ "institutions are completely wrong when comes to evaluating CTDI. From its mathematical expression as being the integral of dose over ionisation chamber length divided by actual irradiated length T, "
+	        {"CT.INFO", "These evaluations are for CTDI measured/computed on CT phantom (head or body). The common protocol is to multiply the reading with L/T (L is chamber length of 100 mm, T is slice thickness). By doing so, you artificially increase the reading as if the whole ionization chamber is uniformely exposed!?! "
+	        		+ " Also, because the reading is directly proportional with T (more dose when more irradiated length), the CTDI evaluated this way is INDEPENDENT of T. The same T independence of CTDI is found when applying TRS457 from IAEA. In fact all these "
+	        		+ "institutions are completely wrong when comes to evaluating CTDI unless it is not related to ONE ROTATION. From its mathematical expression as being the integral of dose over ionisation chamber length divided by actual irradiated length T, "
 	        		+ "we noticed that the integral is approximately equal with the reading times T (plus some realatively very small numbers). That's because the almost all dose profile is concentrated in T region (in ideal chamber, all dose profile is inside T). Therefore by dividing with T, we find that "
-	        		+ "actually the CTDI is THE READING of ionisation chamber (properly calibrated obviously). Hence, mathematical definition of CTDI match our needs of air kierma (the reading) per rotation. The IAEA and other methods of assessing CTDI violates its mathematical definition. "
-	        		+ "If you want to follow the mathematical definition of CTDI, let calibration field be the same as slice thickness field, they will cancel each other so the reading is all that matters."
-	        		+ " Again, the quantity required for Monte Carlo simulation is kerma free in air per rotation measured at center! It can be measured with properly calibrated ionisation chamber or TLD (our definition of CTDI which match the CTDI mathematical definition)!"},
+	        		+ "actually the CTDI is THE READING of ionisation chamber (properly calibrated obviously). Hence, when assessing the CTDIair, the mathematical definition of CTDI match our needs of air kierma (the reading) per rotation. The IAEA and other methods of assessing CTDI violates its mathematical definition. "
+	        		+ "If you want to follow the mathematical definition of CTDI, let calibration field be the same as slice thickness field, they will cancel each other so the reading is all that matters.\n\n"
+	        		+ "The quantity required for Monte Carlo simulation is kerma free in air per rotation measured at center! This CTDIair can be measured with properly calibrated ionisation chamber or TLD (our definition of CTDI which match the CTDI mathematical definition)!. It can also be evaluated from mAs per rotation. The CTDIvol is NOT the CTDIair!"},
 	        
 	        {"KAPB", "Evaluate KAP..."},
 	        {"KAPB.mnemonic", new Character('E')},
@@ -224,13 +227,29 @@ public class DosimetryFrameResources extends ListResourceBundle{
 	        {"field.label","Field size at support/table (width x height to match the phantom examination): "},
 	        {"autoupdate.ch","Auto-update field dimensions when computation starts"},
 	        
+	        { "status.wait", "Waiting for your action!" },
+			{ "status.computing", "Computing..." },
+			{ "status.done", "All done! " },
+			{ "status.error", "Unexpected error!" },
+			
 	        {"geometry.label.ct","Detector (pencil type ionization chamber) placed on CT central axis for CTDIc and at peripheral side (CTDIp) of CT PHANTOM"},
+	        
+	        {"geometry.label.ct.mAs","mAs per rotation = mA x rotation_time[s]. It can also be computed as: effective_mAs x pitch (effective_mAs = mA x rotation_time[s]/pitch)"},
+	        {"ctdiEval.air.mas.label","mAs per rotation: "},
+	        {"ctdiEval.air.computeB", "Compute"},
+	        {"ctdiEval.air.computeB.mnemonic", new Character('C')},
+	        {"ctdiEval.air.text", "Computation for CT XRay tube having the following specifications: "},
+	        {"ctdiEval.air.text.fca", "Focus to isocenter (CT central axis) distance [cm]: "},
+	        {"ctdiEval.air.text.kv", "Tube kilovoltage: "},
+	        {"ctdiEval.air.text.filtration", "Total tube filtration in mmAl equivalent: "},
+	        {"ctdiEval.air.text.uanod", "Anode angle [deg]: "},
+	        {"ctdiEval.air.text.ripple", "Waveform ripple: "},
 	        
 	        {"ctdiEval.length.label","Ionization chamber length [mm]: "},
 	        {"ctdiEval.slices.label","Number of slices: "},
 	        {"ctdiEval.exposure.label", "Reading FOR A SINGLE ROTATION of CT scanner: "},
 	        {"ctdiEval.calFactor.label","Calibration factor -e.g. for 100 mm ionisation chamber- [mGy x mm/Reading_on_mGyScale]: "},
-	        {"ctdiEval.sliceThickness.label","Slice thickness T (if multislice scanner, provide NT) or field height if dental panoramic scan mode [mm]: "},
+	        {"ctdiEval.sliceThickness.label","Collimation (beam width) - slice thickness T (NT if multislice scanner) or field height if dental panoramic scan mode [mm]: "},
 	        {"ctdiEval.pitch.label","Pitch factor: "},
 	        {"ctdiEval.setCTDIcB", "Set as CTDIc"},
 	        {"ctdiEval.setCTDIcB.mnemonic", new Character('S')},
@@ -305,7 +324,7 @@ public class DosimetryFrameResources extends ListResourceBundle{
 	        {"dialog.geometry.message", "Wrong geometry, please reset distances!"},
 	        
 	        {"dialog.ripple", "If anode=Mo or Rh, angle>=9,angle <=23;kv>=25,kv<=32;ripple=0; \n if anod=W, angle >=6 angle<=22;kv>=30;kv<=150!! \n for NONZERO ripple=>kv =55,60,65,...,90!!"},
-	        
+	        	        
 	        {"dialog.age.message", "Invalid phantom age value"},
 	        {"dialog.height.message", "Invalid phantom height value"},
 	        {"dialog.mass.message", "Invalid phantom weight value"},

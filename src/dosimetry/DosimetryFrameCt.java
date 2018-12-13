@@ -83,7 +83,8 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 	
 	private static final String COMPUTE_COMMAND = "COMPUTE";
 	private static final String FILTRATION_COMMAND = "FILTRATION";
-	private static final String KAP_COMMAND = "KAP";
+	private static final String KAP_COMMAND = "KAP";//CTDIvol
+	private static final String CTDI_COMMAND = "CTDI";//CTDIair
 	private static final String PHANTOMDEFAULTS_COMMAND="PHANTOMDEFAULTS";
 	private static final String SAVE_COMMAND = "SAVE";
 	private String command = null;
@@ -99,7 +100,7 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 	private JTextField sliceThicknessTf = new JTextField(5);
 	private JTextField rotationAngleIncrementTf = new JTextField(5);
 	private JTextField pitchFactorTf = new JTextField(5);
-	private JTextField ctdiTf = new JTextField(5);
+	protected JTextField ctdiTf = new JTextField(5);
 	protected JTextField ctdiVolTf = new JTextField(15);
 	
 	//private JTextField mAsTf = new JTextField(5);
@@ -290,10 +291,10 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 		String buttonIconName = "";
 		
 		estimatedMeasurementUncertaintyTf.setText("5");
-		sliceThicknessTf.setText("1.0");
+		sliceThicknessTf.setText("10.0");
 		rotationAngleIncrementTf.setText("1.0");
 		pitchFactorTf.setText("1.0");
-		ctdiTf.setText("20000");//uGy
+		ctdiTf.setText("24600");//uGy
 		ctdiVolTf.setText("20000");//uGy
 		
 	    JPanel puncP=new JPanel();
@@ -319,7 +320,7 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 		examinationCb=new JComboBox(examItems);
 		examinationCb.setMaximumRowCount(5);
 		examinationCb.setPreferredSize(sizeCb2);
-		examinationCb.setSelectedItem((String)"Head");
+		examinationCb.setSelectedItem((String)"Chest");
 		
 		//String[] yesnoItems = (String[])resources.getObject("usemas.cb");
 		//usemasCb=new JComboBox(yesnoItems);
@@ -415,7 +416,7 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 		anodeAngleCb=new JComboBox(anodeAngleItems);
 		anodeAngleCb.setMaximumRowCount(5);
 		anodeAngleCb.setPreferredSize(sizeCb);
-		anodeAngleCb.setSelectedItem((String)"17");
+		anodeAngleCb.setSelectedItem((String)"13");
 		//waveform
 		sup=30;
 		inf =0;
@@ -437,7 +438,7 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 		phantomHeightTf.setText("178.6");
 		phantomWeightTf.setText("71.4614");
 		filtrationTf.setText(totalFiltrationStr);
-		focusmidplaneTf.setText("36");
+		focusmidplaneTf.setText("60");//("36");
 		runsTf.setText("100000");
 		bsfTf.setText("1.3");
 		bsfTf.setToolTipText(resources.getString("BSF.tooltip"));
@@ -642,8 +643,19 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
         JPanel ctdiP=new JPanel();
         ctdiP.setLayout(new FlowLayout(FlowLayout.CENTER, 20,2));
         label=new JLabel(resources.getString("ctdi.label"));
-        ctdiP.add(label);
+        ctdiP.add(label);        
         ctdiP.add(ctdiTf);
+        //--------------
+        buttonName = resources.getString("CTDIB.air");
+		buttonToolTip = resources.getString("CTDIB.air.toolTip");
+		buttonIconName = "";//resources.getString("img.set");
+		button = FrameUtilities.makeButton(buttonIconName, CTDI_COMMAND,
+				buttonToolTip, buttonName, this, this);
+		mnemonic = (Character) resources.getObject("CTDIB.air.mnemonic");
+		button.setMnemonic(mnemonic.charValue());
+		
+		ctdiP.add(button);
+        //---------------
         ctdiP.setBackground(RadQCFrame.bkgColor);
         
         JPanel ctdiVolP=new JPanel();
@@ -672,8 +684,10 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 		examP.add(autoTP);//!!!!!!!!!!!!!!!!!!!!!!
 		examP.add(angleP);//usemasP);
 		examP.add(pitchP);
-		examP.add(ctdiP);examP.add(ctdiVolP);
 		examP.add(distanceP);	
+		examP.add(ctdiP);
+		examP.add(ctdiVolP);
+		
 		//examP.add(examinationP);	
 		examP.setBackground(RadQCFrame.bkgColor);
 		//===============
@@ -739,6 +753,8 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 			filtration();
 		} else if (command.equals(KAP_COMMAND)) {
 			kapEvaluation();
+		} else if (command.equals(CTDI_COMMAND)) {
+			ctdiEvaluation();
 		} else if (command.equals(PHANTOMDEFAULTS_COMMAND)){
 			updateDefaults();
 		} else if (command.equals(SAVE_COMMAND)){
@@ -803,12 +819,70 @@ public class DosimetryFrameCt extends JFrame implements ActionListener, ItemList
 		}
 		
 		if (totalFiltrationStr.equals("")){
-			totalFiltrationStr="2.5";
+			totalFiltrationStr="9.0";
 		}
 	}
 	
 	/**
-	 * Go to CTDI evaluation
+	 * Go to CTDIair evaluation
+	 */
+	private void ctdiEvaluation(){
+		String FCAs = focusmidplaneTf.getText();//checked at MC run
+		try
+	    {
+			if(Convertor.stringToDouble(FCAs)<=0.0){
+			   String title =resources.getString("dialog.number.title");
+			   String message =resources.getString("dialog.distance.message");
+			   JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+			   return;
+			}
+			
+			
+		    
+		}
+		catch(Exception e)
+		{
+		    String title =resources.getString("dialog.number.title");
+		    String message =resources.getString("dialog.distance.message");
+		    JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
+		double FCA = Convertor.stringToDouble(FCAs);
+		
+		String kvs = (String)kvCb.getSelectedItem();
+		double kVD = Convertor.stringToDouble(kvs);//allways good=>from combobox
+		
+		String filtrationS = filtrationTf.getText();//checked on MC run
+		try
+	    {
+			if(Convertor.stringToDouble(filtrationS)<0.0){
+			   String title =resources.getString("dialog.number.title");
+			   String message =resources.getString("dialog.filtration.message");
+			   JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+			   return;
+			}
+		    
+		}
+		catch(Exception e)
+		{
+		    String title =resources.getString("dialog.number.title");
+		    String message =resources.getString("dialog.filtration.message");
+		    JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
+		double filtrareD = Convertor.stringToDouble(filtrationS);
+		
+		String angleS=(String)anodeAngleCb.getSelectedItem();
+		double uAnodD = Convertor.stringToDouble(angleS);
+		
+		String rippleS = (String)rippleCb.getSelectedItem();
+		int ripple = Convertor.stringToInt(rippleS);		 
+		
+		new CTDIAirEvalFrame(this, FCA, kVD, filtrareD, uAnodD, ripple);		
+	}
+	
+	/**
+	 * Go to CTDIvol evaluation
 	 */
 	private void kapEvaluation(){
 		String sliceThickness = sliceThicknessTf.getText();//request.getParameter("sliceThickness");	

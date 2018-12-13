@@ -1,5 +1,8 @@
+Version 1.5
+Added the possibility for evaluating CTDi_air (free in air kerma at central axis per rotation) from mAs per rotation.
+
 Version 1.4 
-Fixed some defaults in CTDI Evaluation frame.
+Fixed some defaults in CTDI Evaluation frame. Modified some labels for more clear info and added some CTDI knowhow to be displayed when opening CTDi evaluation frame.
 
 version 1.3
 Fixed minor bug in XRaySpectra when building the filename for reading spectra. The case for anode angle of 10 is now properly fixed.
